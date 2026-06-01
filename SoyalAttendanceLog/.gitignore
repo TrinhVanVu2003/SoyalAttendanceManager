@@ -1,0 +1,25 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+
+# SQLite
+*.db
+*.sqlite
+
+# Logs
+logs/
+attendance.db
+
+# Backup
+backup/
+config.json
+# Publish
+publish/
+
+# NuGet cache
+packages/
