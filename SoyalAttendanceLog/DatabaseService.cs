@@ -55,6 +55,10 @@ namespace SoyalAttendanceLog
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
+                if (string.IsNullOrWhiteSpace(log.UserName))
+                {
+                    log.UserName = GetEmployeeName(log.UserId);
+                }
 
                 string sql = @"
                INSERT OR IGNORE INTO AttendanceLogs
@@ -184,6 +188,33 @@ namespace SoyalAttendanceLog
 
                 using (var command = new SQLiteCommand(sql, connection))
                 {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteEmployee(string userId)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+
+                string sql = "DELETE FROM Employees WHERE UserId = @UserId;";
+
+                using (var command = new SQLiteCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.ExecuteNonQuery();
+                }
+
+                string updateSql = @"
+                UPDATE AttendanceLogs
+                SET UserName = ''
+                WHERE UserId = @UserId;";
+
+                using (var command = new SQLiteCommand(updateSql, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
                     command.ExecuteNonQuery();
                 }
             }

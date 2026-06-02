@@ -555,10 +555,27 @@ namespace SoyalAttendanceLog
             string userId = txtEmployeeUserId.Text.Trim();
             string userName = txtEmployeeName.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(userId) ||
-                string.IsNullOrWhiteSpace(userName))
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                MessageBox.Show("Vui lòng nhập User ID và tên nhân viên");
+                MessageBox.Show("Vui lòng nhập User ID");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                var result = MessageBox.Show(
+                    "Bạn muốn xóa tên nhân viên của User ID này?",
+                    "Confirm",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    _databaseService.DeleteEmployee(userId);
+                    MessageBox.Show("Đã xóa tên nhân viên");
+                    LoadLogsToGrid();
+                }
+
                 return;
             }
 
